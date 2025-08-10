@@ -1,40 +1,57 @@
 import { useState, useEffect } from 'react';
 
-const getDefaultSort = (data, cols) => {
-   const result = []
-   for (let row of data) {
-      let val = {
-         ID: row.id,
-         'Full Name': `${row.fname} ${row.lname}`,
-         'First Name': row.fname,
-         'Last Name': row.lname,
-         Email: row.email,
-         City: row.city,
-         'Registered Date': dateTest(row.joined),
-         DSR: getCount(row.joined)
-      }
-      result.push(val)
-   }
+const getSortValues = (data, arr = null, col = 'Id') => {
+   if (!arr) arr = data.map((_,i) => i)
+   const result = arr.map((el,i) => {
+      let dataRow = data.find(val => val[col] == el)
+      return dataDisplay(dataRow)
+   })
+   
    return result
 }
 
-const dateTest = (date) => {
-   // let parsed = Date.parse(date)
-   return date.getMonth()
+const dataDisplay = (row) => {
+   return {
+      ID: row.Id,
+      'Full Name': `${row.FirstName} ${row.LastName}`,
+      'First Name': row.FirstName,
+      'Last Name': row.LastName,
+      Email: row.Email,
+      City: row.City,
+      'Registered Date': row.RegDate.toDateString(),
+      DSR: getCount(row.RegDate)
+   }
 }
+
 const getCount = (date) => {
-   const end = Date.now()
-   const start = Date(date)
-   const count = end - start;
+   const now = new Date(Date.now())
+
+   // set both values to midnight to only include days in count
+   const nowRound = now.setHours(0, 0, 0, 0);
+   const joinedRound = new Date(date)
+   joinedRound.setHours(0,0,0,0)
+   
+   const count = nowRound - joinedRound;
    return count / (1000 * 3600 * 24)
 }
 
-// const columns = ['Id', 'Full Name', 'First Name', 'Last Name', 'Email', 'City', 'Registration Date', 'DSR']
-
 export const useColumnSorting = (data, cols) => {
-   const [tableData, setTableData] = useState(getDefaultSort(data, cols))
-   // const output = {
-   //    value: tableData
-   // }
-   return [tableData]
+   const [tableData, setTableData] = useState(getSortValues(data))
+
+   const handleSort = (col, dir) => {
+      let sortedValues;
+      // if date field
+      if (col == 'RegDate') {
+         let valueArray = data.map((el,i) => el[col])
+         if (dir == 'asc') sortedValues = valueArray.sort((a, b) => a - b)
+         if (dir == 'desc') sortedValues = valueArray.sort((a, b) => b - a)
+      }
+      // if numeric field
+      if (col == 'Id' || col == '')
+      // if alpha field
+
+      setTableData(getSortValues(data, sortedValues, col))
+   }
+
+   return [tableData, handleSort]
 }

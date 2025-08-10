@@ -1,28 +1,30 @@
 import TableBody from './TableBody';
 import TableHead from './TableHead';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useColumnSorting } from '../useColumnSorting';
 
 const Table = ({data}) => {
 
-   console.log(data)
    const columns = ['Id', 'Full Name', 'First Name', 'Last Name', 'Email', 'City', 'Registered Date', 'DSR']
-   const [tableData] = useColumnSorting(data, columns)
-   // const sortData = (columnName) => {
-   //    if (columnName == 'Registration Date') {return 0}
-   //    else if (columnName == 'DSR') {return 0}
-   //    else {
-   //       return 1
-   //    }
-   // }
+   const [tableData, handleSort] = useColumnSorting(data, columns)
+
+   useEffect(() => console.log(tableData))
+
+   const handleClick = (e) => {
+      e.preventDefault()
+      const col = e.target.value;
+      handleSort(col, 'asc')
+   }
 
    return (
       <div>
          <h1>Table</h1>
          <table>
-            <TableHead columns={columns} />
+            <TableHead columns={columns} handleSort={handleSort} />
             <TableBody columns={columns} data={tableData} />
+            
          </table>
+         <button onClick={handleClick} value='RegDate'>Date</button>
       </div>
    )
 }

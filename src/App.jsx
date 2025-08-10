@@ -9,13 +9,13 @@ function App() {
   const getData = () => {
     const dataArray = []
     for (let i = 0; i < 25; i++) {
-      let fname = faker.person.firstName();
-      let lname = faker.person.lastName();
-      let email = faker.internet.email({firstName: fname, lastName: lname})
-      let city = faker.location.city()
-      let joined = faker.date.recent({ days:365 })
-
-      let val = {id: i, fname, lname, email, city, joined}
+      let FirstName = faker.person.firstName();
+      let LastName = faker.person.lastName();
+      let Email = faker.internet.email({firstName: FirstName, lastName: LastName})
+      let City = faker.location.city()
+      let RegDate = faker.date.recent({ days:365 })
+      
+      let val = {Id: i, FirstName, LastName, Email, City, RegDate}
       dataArray.push(val)
     }
     setList(dataArray)
