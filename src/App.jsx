@@ -13,8 +13,8 @@ function App() {
       let LastName = faker.person.lastName();
       let Email = faker.internet.email({firstName: FirstName, lastName: LastName})
       let City = faker.location.city()
-      let RegDate = faker.date.recent({ days:365 })
-      
+      let initDate = faker.date.recent({ days:365 })
+      let RegDate = initDate.toISOString().split('T')[0]
       let val = {Id: i, FirstName, LastName, Email, City, RegDate}
       dataArray.push(val)
     }
