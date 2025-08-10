@@ -1,18 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const getSortValues = (dataArr) => {
-   return dataArr.map(el => dataDisplay(el))
-   // if (!arr) arr = data.map((_,i) => i)
-   // const result = arr.map((el,i) => {
-   //    let dataRow = data.find(val => val[col] == el)
-   //    return dataDisplay(dataRow)
-   // })
-   
-   // return result
-}
-
-const dataDisplay = (row) => {
-   return {
+const getSortValues = async (dataArr) => {
+   return dataArr.map(row => {
+      return {
       ID: row.Id,
       'Full Name': `${row.FirstName} ${row.LastName}`,
       'First Name': row.FirstName,
@@ -22,12 +12,8 @@ const dataDisplay = (row) => {
       'Registered Date': row.RegDate,
       DSR: getDSRCount(row.RegDate)
    }
+   })
 }
-
-// const getFormattedDate = (date) => {
-//    const dateCopy = new Date(date)
-//    return dateCopy.toDateString() 86400000
-// }
 
 const getDSRCount = (date) => {
    const now = new Date(Date.now())
@@ -45,7 +31,7 @@ const getDSRCount = (date) => {
    return result
 }
 
-const sortAlphaAsc = (col, data) => {
+const sortAlphaAsc = async (col, data) => {
    return data.sort((a,b) => {
       const valA = a[col].toUpperCase();
       const valB = b[col].toUpperCase();
@@ -55,9 +41,7 @@ const sortAlphaAsc = (col, data) => {
    })
 }
 
-// const sortDateNumAsc = (col, data) => data.sort((a,b) => a[col] - b[col])
-
-const sortAlphaDesc = (col, data) => {
+const sortAlphaDesc = async (col, data) => {
    return data.sort((a,b) => {
       const valA = a[col].toUpperCase();
       const valB = b[col].toUpperCase();
@@ -67,54 +51,45 @@ const sortAlphaDesc = (col, data) => {
    })
 }
 
-const sortDateNumDesc = (col, data) => data.sort((a,b) => b[col] - a[col])
+const sortNumDesc = async (col, data) => data.sort((a,b) => b[col] - a[col])
 
 export const useColumnSorting = (data) => {
-   const [tableData, setTableData] = useState(getSortValues(data))
+   const [tableData, setTableData] = useState(null)
+   const [isLoading, setIsLoading] = useState(false)
+   const [isError, setIsError] = useState(null)
 
-   const handleSort = (colName, dir) => {
-      let sortedValues;
-      let sortCol;
-      const dataCopy = JSON.parse(JSON.stringify(data));
-      switch (colName) {
-         case 'Full Name':
-         case 'First Name':
-            // sortCol = 'FirstName';
-            sortedValues = (dir == 'desc') ? sortAlphaDesc('FirstName', dataCopy) : sortAlphaAsc('FirstName', dataCopy)
-            break;
-         case 'Last Name':
-            // sortCol = 'LastName';
-            sortedValues = (dir == 'desc') ? sortAlphaDesc('LastName', dataCopy) : sortAlphaAsc('LastName', dataCopy)
-            break;
-         case 'City':
-            // sortCol = 'City';
-            sortedValues = (dir == 'desc') ? sortAlphaDesc('City', dataCopy) : sortAlphaAsc('City', dataCopy)
-            break;
-         case 'Email':
-            // sortCol = 'Email';
-            sortedValues = (dir == 'desc') ? sortAlphaDesc('Email', dataCopy) : sortAlphaAsc('Email', dataCopy)
-            break;
-         case 'Registered Date': 
-         case 'DSR': 
-            // sortCol = 'RegDate';
-            sortedValues = (dir == 'desc') ? sortAlphaAsc('RegDate', dataCopy) : sortAlphaDesc('RegDate', dataCopy)
-            // sortedValues = dir == 'desc' ? sortDateNumDesc('RegDate', dataCopy) : sortDateNumAsc('RegDate', dataCopy)
-            break;
-         default:
-            // sortCol = 'Id'
-            sortedValues = (dir == 'desc') ? sortDateNumDesc('Id', dataCopy) : data
+   useEffect(() => {
+      const applyData = async (data) => {
+         setIsLoading(true);
+         try {
+            getSortValues(data).then(val => setTableData(val))
+         } catch (error) {
+            setIsError(error)
+         } finally {
+            setIsLoading(false)
+         }
       }
-      // if (sortCol !== 'Id') {
-      //    if (dir == 'asc') sortedValues = sortAlphaAsc(sortCol, dataCopy)
-      //    else if (dir == 'desc') sortedValues = sortAlphaDesc(sortCol, dataCopy)
-      //    else sortedValues = data
-      // } else {
-      //    if (dir == 'desc') sortedValues = sortDateNumDesc('Id', dataCopy)
-      //    else sortedValues = data
-      // }
-         
-      setTableData(getSortValues(sortedValues))
+      applyData(data)
+      return () => {}
+   }, [])
+
+   const handleSort = async (colName, dir) => {
+      let sortedValues;
+      const dataCopy = JSON.parse(JSON.stringify(data));
+      if (colName == 'Id') {
+         sortedValues = (dir == 'desc') ? await sortNumDesc('Id', dataCopy) : dataCopy
+      } else if (colName == 'RegDate' || colName == 'DSR') {
+         sortedValues = (dir == 'desc') ? await sortAlphaAsc('RegDate', dataCopy) : await sortAlphaDesc('RegDate', dataCopy)
+      } else if (colName == 'FullName') {
+         sortedValues = (dir == 'desc') ? await sortAlphaDesc('FirstName', dataCopy) : await sortAlphaAsc('FirstName', dataCopy)
+      }else {
+         sortedValues = (dir == 'desc') ? await sortAlphaDesc(colName, dataCopy) : await sortAlphaAsc(colName, dataCopy)
+      }
+
+      let result = await getSortValues(sortedValues)
+
+      setTableData(result)
    }
 
-   return [tableData, handleSort]
+   return [tableData, handleSort, isLoading, isError]
 }
