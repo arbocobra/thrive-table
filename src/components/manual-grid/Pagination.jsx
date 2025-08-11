@@ -7,13 +7,6 @@ const Pagination = ({displayPage, count, setDisplayPage, rows, setRowCount}) => 
 
    const handleRowChange = (e) => {
       let val = parseInt(e.target.value)
-      // let options = e.target.children
-      // let val
-      // options.forEach(el => {
-      //    if (el.selected) {
-      //       val = parseInt(el.value)
-      //    }
-      // })
       setRowCount(val)
    }
 

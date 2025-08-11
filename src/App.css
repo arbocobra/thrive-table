@@ -184,3 +184,14 @@ select {
   padding: 5px 10px;
   cursor: pointer;
 }
+
+.container {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 30px;
+}
+
+.caption {
+  font-style: italic;
+  padding: 20px;
+}

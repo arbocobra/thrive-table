@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 const TableHead = ({columns, handleSort}) => {
+   // define sorting column and direction
    const [sortField, setSortField] = useState('Id')
    const [sortOrder, setSortOrder] = useState('asc')
 

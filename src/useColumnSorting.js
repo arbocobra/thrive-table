@@ -1,38 +1,8 @@
 import { useState, useEffect } from 'react';
+import { getDSRCount } from './data';
 
-// format default data and sorted data to final table values
-export const getSortValues = async (dataArr) => {
-   // return dataArr.map(row => {
-   //    return {
-   //       'ID': row.Id,
-   //       // 'Full Name': `${row.FirstName} ${row.LastName}`,
-   //       'First Name': row.FirstName,
-   //       'Last Name': row.LastName,
-   //       'Email': row.Email,
-   //       'City': row.City,
-   //       'Registered Date': row.RegDate,
-   //       'DSR': getDSRCount(row.RegDate)
-   //    }
-   // })
-   return dataArr.map(row => ({...row, 'DSR': getDSRCount(row.RegDate)}))
-}
-
-// calculate days since registration
-const getDSRCount = (date) => {
-   // get current date, convert registration date back to date type from string
-   const now = new Date(Date.now())
-   const joinedRound = new Date(date)
-   
-   // set both days to midnight
-   const nowRound = now.setHours(0, 0, 0, 0);
-   joinedRound.setHours(0,0,0,0)
-
-   // calculate days - round for DST changes
-   const count = nowRound - joinedRound;
-   const result = Math.ceil(count / (1000 * 3600 * 24) - 1)
-
-   return result
-}
+// iterate data to add DSR value, async for large libraries
+export const getFinalValues = async (dataArr) => dataArr.map(row => ({...row, 'DSR': getDSRCount(row.RegDate)}))
 
 // sort columns with string values - ascending
 const sortAlphaAsc = async (col, data) => {
@@ -64,19 +34,21 @@ export const useColumnSorting = (data) => {
    const [tableData, setTableData] = useState(null)
    const [isLoading, setIsLoading] = useState(false)
 
+   const dataCopy = JSON.parse(JSON.stringify(data));
+   
    // useEffect runs on initial load to format default table values, applies isLoading while active
    useEffect(() => {
-      const applyData = async (data) => {
+      const applyData = async () => {
          setIsLoading(true);
          try {
-            getSortValues(data).then(val => setTableData(val))
+            getFinalValues(data).then(val => setTableData(val))
          } catch (e) {
             console.error('Error fetching data: ', e);
          } finally {
             setIsLoading(false)
          }
       }
-      applyData(data)
+      applyData()
       return () => {}
    }, [])
 
@@ -100,7 +72,7 @@ export const useColumnSorting = (data) => {
          sortedValues = (dir == 'desc') ? await sortAlphaDesc(colName, dataCopy) : await sortAlphaAsc(colName, dataCopy)
       }
 
-      let result = await getSortValues(sortedValues)
+      let result = await getFinalValues(sortedValues)
 
       setTableData(result)
    }

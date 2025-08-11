@@ -31,7 +31,8 @@ const TableManual = ({data, updateSelectView}) => {
    return (
       <div>
          <div onClick={() => updateSelectView(0)} className='return-button'><span>&#129104;  Back</span></div>
-         <h3>Table 1: Built From Scratch</h3>
+         <h3>Table 1 - Built From Scratch</h3>
+         <div className='caption'>Table includes sortable rows, multiple rows per page options, and pagination</div>
          { isLoading && <p>Loading...</p> }
          { data && (
             <>

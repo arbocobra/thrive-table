@@ -8,7 +8,7 @@ import './App.css'
 
 const App = () => {
   const [list, setList] = useState([])
-  const [gridDisplay, setGridDisplay] = useState('manual')
+  const [gridDisplay, setGridDisplay] = useState('select')
 
   useEffect(() => {
     // no duplicate data on first render
@@ -25,14 +25,23 @@ const App = () => {
   const updateSelectView = (val) => {
     if (val > 0) setGridDisplay('agGrid')
     else if (val < 0) setGridDisplay('manual')
-    else setGridDisplay(null)
+    else setGridDisplay('select')
   }
+
+  const Footer = (
+    <span>Natalie Rekai - August 11, 2025 - <a target='_blank' href='https://github.com/arbocobra/thrive-table'>git</a></span>
+  )
 
   // Enable selection after user list has been fetched, else display loading graphic
   if (list.length) {
-    if (gridDisplay == 'agGrid') return <div><TableLib data={list} updateSelectView={updateSelectView} /></div>
-    else if (gridDisplay == 'manual') return <div><TableManual data={list} updateSelectView={updateSelectView} /></div>
-    else return <div><SelectGrid updateSelectView={updateSelectView} /></div>
+      return (
+      <div className='container'>
+        { gridDisplay == 'select' && <SelectGrid updateSelectView={updateSelectView} /> }
+        { gridDisplay == 'manual' && <TableManual data={list} updateSelectView={updateSelectView} /> }
+        { gridDisplay == 'agGrid' && <TableLib data={list} updateSelectView={updateSelectView} /> }
+        {Footer}
+      </div>
+    )
   } else {
     return (
       <div className='container'>
