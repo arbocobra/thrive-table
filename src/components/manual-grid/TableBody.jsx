@@ -12,17 +12,14 @@ const TableBody = ({page, count, columns, data}) => {
                if (i >= startRange && i < endRange) {
                   return (
                      <tr key={`row-${i}`}>
-                        {columns.map(({accessor, label}) => {
-                           let val = row[label] ? row[label] : '-'
-                           if (row[label] == 0) val = 0
+                        {columns.map(({accessor}) => {
+                           let val = row[accessor] ? row[accessor] : '-'
+                           if (row[accessor] == 0) val = 0
                            if (accessor == 'FullName') {
-                              return (<td key={`${accessor}-${i}`}>{`${row['First Name']} ${row['Last Name']}`}</td>)
+                              return (<td key={`${accessor}-${i}`}>{`${row['FirstName']} ${row['LastName']}`}</td>)
                            } else {
                               return (<td key={`${accessor}-${i}`}>{val}</td>)
                            }
-                           // return (
-                           //    <td key={`${accessor}-${i}`}>{val}</td>
-                           // )
                         })}
                      </tr>
                   )

@@ -2,18 +2,19 @@ import { useState, useEffect } from 'react';
 
 // format default data and sorted data to final table values
 export const getSortValues = async (dataArr) => {
-   return dataArr.map(row => {
-      return {
-         'ID': row.Id,
-         // 'Full Name': `${row.FirstName} ${row.LastName}`,
-         'First Name': row.FirstName,
-         'Last Name': row.LastName,
-         'Email': row.Email,
-         'City': row.City,
-         'Registered Date': row.RegDate,
-         'DSR': getDSRCount(row.RegDate)
-      }
-   })
+   // return dataArr.map(row => {
+   //    return {
+   //       'ID': row.Id,
+   //       // 'Full Name': `${row.FirstName} ${row.LastName}`,
+   //       'First Name': row.FirstName,
+   //       'Last Name': row.LastName,
+   //       'Email': row.Email,
+   //       'City': row.City,
+   //       'Registered Date': row.RegDate,
+   //       'DSR': getDSRCount(row.RegDate)
+   //    }
+   // })
+   return dataArr.map(row => ({...row, 'DSR': getDSRCount(row.RegDate)}))
 }
 
 // calculate days since registration
