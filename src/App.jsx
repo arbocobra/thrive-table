@@ -1,52 +1,45 @@
 import { useState, useEffect } from 'react'
-import { faker } from '@faker-js/faker';
-import Table from './components/Table';
-import './App.css'
+import { PropagateLoader } from 'react-spinners';
+import TableManual from './components/manual-grid/TableManual';
+import TableLib from './components/library-grid/TableLib';
+import SelectGrid from './components/SelectGrid';
 import { getData } from './data';
+import './App.css'
 
 const App = () => {
   const [list, setList] = useState([])
-
-  // const getData = () => {
-  //   const dataArray = []
-  //   for (let i = 0; i < 25; i++) {
-  //     let FirstName = faker.person.firstName();
-  //     let LastName = faker.person.lastName();
-  //     let Email = faker.internet.email({firstName: FirstName, lastName: LastName})
-  //     let City = faker.location.city()
-  //     let initDate = faker.date.recent({ days:365 })
-  //     let RegDate = initDate.toISOString().split('T')[0]
-  //     let val = {Id: i, FirstName, LastName, Email, City, RegDate}
-  //     dataArray.push(val)
-  //   }
-  //   setList(dataArray)
-  // }
+  const [gridDisplay, setGridDisplay] = useState('manual')
 
   useEffect(() => {
+    // no duplicate data on first render
     let ignore = false
-    getData()
-    .then(data => {
+    
+    // Request 500 users for table
+    getData(500).then(data => {
       if (!ignore) setList(data)
     })
     return () => ignore = true
-  
-    // getData().then(data => setList(data))
   },[])
 
+  // Select to view manually-built table or version made with react library
+  const updateSelectView = (val) => {
+    if (val > 0) setGridDisplay('agGrid')
+    else if (val < 0) setGridDisplay('manual')
+    else setGridDisplay(null)
+  }
+
+  // Enable selection after user list has been fetched, else display loading graphic
   if (list.length) {
-    return (
-        <div className='container'>
-          <Table data={list} />
-        </div>
-    )
+    if (gridDisplay == 'agGrid') return <div><TableLib data={list} updateSelectView={updateSelectView} /></div>
+    else if (gridDisplay == 'manual') return <div><TableManual data={list} updateSelectView={updateSelectView} /></div>
+    else return <div><SelectGrid updateSelectView={updateSelectView} /></div>
   } else {
     return (
       <div className='container'>
-          <p>Loading...</p>
+          <PropagateLoader/>
       </div>
     )
   }
-
 }
 
-export default App
+export default App 

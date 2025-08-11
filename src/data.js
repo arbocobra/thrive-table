@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
 
-export const getData = async () => {
+export const getData = async (count) => {
     const dataArray = []
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < count; i++) {
       let FirstName = faker.person.firstName();
       let LastName = faker.person.lastName();
       let Email = faker.internet.email({firstName: FirstName, lastName: LastName})

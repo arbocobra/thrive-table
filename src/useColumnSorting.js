@@ -1,36 +1,39 @@
 import { useState, useEffect } from 'react';
 
-const getSortValues = async (dataArr) => {
+// format default data and sorted data to final table values
+export const getSortValues = async (dataArr) => {
    return dataArr.map(row => {
       return {
-      ID: row.Id,
-      'Full Name': `${row.FirstName} ${row.LastName}`,
-      'First Name': row.FirstName,
-      'Last Name': row.LastName,
-      Email: row.Email,
-      City: row.City,
-      'Registered Date': row.RegDate,
-      DSR: getDSRCount(row.RegDate)
-   }
+         'ID': row.Id,
+         // 'Full Name': `${row.FirstName} ${row.LastName}`,
+         'First Name': row.FirstName,
+         'Last Name': row.LastName,
+         'Email': row.Email,
+         'City': row.City,
+         'Registered Date': row.RegDate,
+         'DSR': getDSRCount(row.RegDate)
+      }
    })
 }
 
+// calculate days since registration
 const getDSRCount = (date) => {
+   // get current date, convert registration date back to date type from string
    const now = new Date(Date.now())
    const joinedRound = new Date(date)
    
    // set both days to midnight
    const nowRound = now.setHours(0, 0, 0, 0);
    joinedRound.setHours(0,0,0,0)
-   
-   const count = nowRound - joinedRound;
 
    // calculate days - round for DST changes
+   const count = nowRound - joinedRound;
    const result = Math.ceil(count / (1000 * 3600 * 24) - 1)
 
    return result
 }
 
+// sort columns with string values - ascending
 const sortAlphaAsc = async (col, data) => {
    return data.sort((a,b) => {
       const valA = a[col].toUpperCase();
@@ -41,6 +44,7 @@ const sortAlphaAsc = async (col, data) => {
    })
 }
 
+// sort columns with string values - descending
 const sortAlphaDesc = async (col, data) => {
    return data.sort((a,b) => {
       const valA = a[col].toUpperCase();
@@ -51,20 +55,22 @@ const sortAlphaDesc = async (col, data) => {
    })
 }
 
+// sort columns with numerical values - descending
 const sortNumDesc = async (col, data) => data.sort((a,b) => b[col] - a[col])
 
+// custom sorting hook - includes handleSort function
 export const useColumnSorting = (data) => {
    const [tableData, setTableData] = useState(null)
    const [isLoading, setIsLoading] = useState(false)
-   const [isError, setIsError] = useState(null)
 
+   // useEffect runs on initial load to format default table values, applies isLoading while active
    useEffect(() => {
       const applyData = async (data) => {
          setIsLoading(true);
          try {
             getSortValues(data).then(val => setTableData(val))
-         } catch (error) {
-            setIsError(error)
+         } catch (e) {
+            console.error('Error fetching data: ', e);
          } finally {
             setIsLoading(false)
          }
@@ -73,16 +79,23 @@ export const useColumnSorting = (data) => {
       return () => {}
    }, [])
 
+   // handleSort applies different sorting functions depending on values associated with each table column
    const handleSort = async (colName, dir) => {
       let sortedValues;
       const dataCopy = JSON.parse(JSON.stringify(data));
+
       if (colName == 'Id') {
+         // Id column has numerical values, Id->Ascending is default
          sortedValues = (dir == 'desc') ? await sortNumDesc('Id', dataCopy) : dataCopy
       } else if (colName == 'RegDate' || colName == 'DSR') {
+         // When sorted, RegDate and DSR values are ordered the same
+         // Date was converted to ISO-string which can be sorted alphabetically
          sortedValues = (dir == 'desc') ? await sortAlphaAsc('RegDate', dataCopy) : await sortAlphaDesc('RegDate', dataCopy)
       } else if (colName == 'FullName') {
+         // Full Name is not part of the data, but can be sorted using First Name
          sortedValues = (dir == 'desc') ? await sortAlphaDesc('FirstName', dataCopy) : await sortAlphaAsc('FirstName', dataCopy)
       }else {
+         // Remaining columns can be sorted alphabetically
          sortedValues = (dir == 'desc') ? await sortAlphaDesc(colName, dataCopy) : await sortAlphaAsc(colName, dataCopy)
       }
 
@@ -91,5 +104,5 @@ export const useColumnSorting = (data) => {
       setTableData(result)
    }
 
-   return [tableData, handleSort, isLoading, isError]
+   return [tableData, handleSort, isLoading]
 }
