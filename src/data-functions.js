@@ -22,7 +22,30 @@ export const getData = async (count) => {
     let val = {Id: i, FirstName, LastName, Email, City, RegDate}
     dataArray.push(val)
   }
+  
   return dataArray
+}
+
+export const fetchData = async () => {
+  const filePath = '/api/data.json'
+  try {
+    const response = await fetch(filePath)
+    const data = await response.json()
+    return data
+  } catch (e) {console.error('I broke')}
+}
+
+// without a server there are no functions to limit fetch results in the request query
+// this step is meant to replicate requesting a specific data range
+export const fetchDataRange = async (page) => {
+  const filePath = '/api/data.json'
+  const startRow = page * 20;
+  const endRow = startRow + 20;
+  try {
+    const response = await fetch(filePath)
+    const data = await response.json()
+    return data.slice(startRow, endRow);
+  } catch (e) {console.error('I broke')}
 }
 
 // calculate days since registration

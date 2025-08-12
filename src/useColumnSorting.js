@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getDSRCount } from './data';
+import { getDSRCount } from './data-functions';
 
 // iterate data to add DSR value, async for large libraries
 export const getFinalValues = async (dataArr) => dataArr.map(row => ({...row, 'DSR': getDSRCount(row.RegDate)}))
