@@ -5,6 +5,7 @@ import TableLib from './components/library-grid/TableLib';
 import SelectGrid from './components/SelectGrid';
 import Footer from './components/Footer';
 import { getData } from './data';
+import GridExample from './components/library-grid/Table';
 import './App.css'
 
 const App = () => {
@@ -30,23 +31,32 @@ const App = () => {
   }
 
 
-  // Enable selection after user list has been fetched, else display loading graphic
-  if (list.length) {
-      return (
+  // // Enable selection after user list has been fetched, else display loading graphic
+  // if (list.length) {
+  //     return (
+  //     <div className='container'>
+  //       { gridDisplay == 'select' && <SelectGrid updateSelectView={updateSelectView} /> }
+  //       { gridDisplay == 'manual' && <TableManual data={list} updateSelectView={updateSelectView} /> }
+  //       { gridDisplay == 'agGrid' && <TableLib data={list} updateSelectView={updateSelectView} /> }
+  //       <Footer />
+  //     </div>
+  //   )
+  // } else {
+  //   return (
+  //     <div className='container'>
+  //         <PropagateLoader/>
+  //     </div>
+  //   )
+  // }
+  return (
       <div className='container'>
         { gridDisplay == 'select' && <SelectGrid updateSelectView={updateSelectView} /> }
         { gridDisplay == 'manual' && <TableManual data={list} updateSelectView={updateSelectView} /> }
-        { gridDisplay == 'agGrid' && <TableLib data={list} updateSelectView={updateSelectView} /> }
+        {/* { gridDisplay == 'agGrid' && <TableLib data={list} updateSelectView={updateSelectView} /> } */}
+        { gridDisplay == 'agGrid' && <GridExample/> }
         <Footer />
       </div>
     )
-  } else {
-    return (
-      <div className='container'>
-          <PropagateLoader/>
-      </div>
-    )
-  }
 }
 
 export default App 

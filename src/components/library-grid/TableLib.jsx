@@ -20,8 +20,6 @@ const TableLib = ({ data, updateSelectView }) => {
    ]);
 
    const myTheme = themeQuartz.withParams({
-      // accentColor: '#5BC3BA',
-      // browserColorScheme: 'light',
       fontFamily: { googleFont: 'Roboto', },
       headerFontSize: 13,
       fontSize: 12,
@@ -43,11 +41,6 @@ const TableLib = ({ data, updateSelectView }) => {
    return (
       <div>
          <Header title={title} caption={caption} updateSelectView={updateSelectView} />
-         {/* <div onClick={() => updateSelectView(0)} className='return-button'>
-            <span>&#129104; Back</span>
-         </div>
-         <h3>Table 2 - Built With AG Grid library</h3>
-         <div className='caption'>Table includes sortable rows, drag and drop columns, multiple rows per page options and pagination</div> */}
          <div className='agtable-container'>
             <AgGridReact
                rowData={rowData}
@@ -57,7 +50,6 @@ const TableLib = ({ data, updateSelectView }) => {
                paginationPageSize={20}
                paginationPageSizeSelector={[20, 50, 100]}
                theme={myTheme}
-               // rowHeight={35}
             />
          </div>
       </div>

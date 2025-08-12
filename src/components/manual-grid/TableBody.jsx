@@ -1,3 +1,4 @@
+import TableRow from './TableRow';
 const TableBody = ({ page, count, columns, data }) => {
    const startRange = page * count;
    const endRange = startRange + count;
@@ -7,19 +8,7 @@ const TableBody = ({ page, count, columns, data }) => {
          <tbody>
             {data.map((row, i) => {
                if (i >= startRange && i < endRange) {
-                  return (
-                     <tr key={`row-${i}`}>
-                        {columns.map(({ accessor }) => {
-                           let val = row[accessor] ? row[accessor] : '-';
-                           if (row[accessor] == 0) val = 0;
-                           if (accessor == 'FullName') {
-                              return <td key={`${accessor}-${i}`}>{`${row['FirstName']} ${row['LastName']}`}</td>;
-                           } else {
-                              return <td key={`${accessor}-${i}`}>{val}</td>;
-                           }
-                        })}
-                     </tr>
-                  );
+                return <TableRow key={`row-${i}`} columns={columns} row={row} i={i}/>
                }
             })}
          </tbody>
