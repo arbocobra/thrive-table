@@ -3,6 +3,7 @@ import { PropagateLoader } from 'react-spinners';
 import TableManual from './components/manual-grid/TableManual';
 import TableLib from './components/library-grid/TableLib';
 import SelectGrid from './components/SelectGrid';
+import Footer from './components/Footer';
 import { getData } from './data';
 import './App.css'
 
@@ -28,9 +29,6 @@ const App = () => {
     else setGridDisplay('select')
   }
 
-  const Footer = (
-    <span>Natalie Rekai - August 11, 2025 - <a target='_blank' href='https://github.com/arbocobra/thrive-table'>git</a></span>
-  )
 
   // Enable selection after user list has been fetched, else display loading graphic
   if (list.length) {
@@ -39,7 +37,7 @@ const App = () => {
         { gridDisplay == 'select' && <SelectGrid updateSelectView={updateSelectView} /> }
         { gridDisplay == 'manual' && <TableManual data={list} updateSelectView={updateSelectView} /> }
         { gridDisplay == 'agGrid' && <TableLib data={list} updateSelectView={updateSelectView} /> }
-        {Footer}
+        <Footer />
       </div>
     )
   } else {

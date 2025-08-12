@@ -2,6 +2,7 @@ import { useState } from 'react';
 import TableBody from './TableBody';
 import TableHead from './TableHead';
 import Pagination from './Pagination';
+import Header from '../Header';
 import { useColumnSorting } from '../../useColumnSorting';
 
 // Table built without libraries - custom sorting hook adapted from: https://github.com/Ibaslogic/react-sortable-table.git
@@ -28,11 +29,12 @@ const TableManual = ({data, updateSelectView}) => {
       { accessor: 'DSR', label: 'DSR' },
    ]
 
+   const title = 'Table 1 - Built From Scratch'
+   const caption = 'Table includes sortable rows, multiple rows per page options, and pagination'
+
    return (
       <div>
-         <div onClick={() => updateSelectView(0)} className='return-button'><span>&#129104;  Back</span></div>
-         <h3>Table 1 - Built From Scratch</h3>
-         <div className='caption'>Table includes sortable rows, multiple rows per page options, and pagination</div>
+         <Header title={title} caption={caption} updateSelectView={updateSelectView} />
          { isLoading && <p>Loading...</p> }
          { data && (
             <>

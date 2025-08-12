@@ -1,6 +1,7 @@
 import { AgGridReact } from 'ag-grid-react';
 import { useState, useEffect } from 'react';
 import { getFinalValues } from '../../useColumnSorting';
+import Header from '../Header';
 import { ModuleRegistry, ClientSideRowModelModule, PaginationModule, themeQuartz } from 'ag-grid-community';
 
 const TableLib = ({ data, updateSelectView }) => {
@@ -19,11 +20,12 @@ const TableLib = ({ data, updateSelectView }) => {
    ]);
 
    const myTheme = themeQuartz.withParams({
-      accentColor: '#5BC3BA',
-      browserColorScheme: 'light',
+      // accentColor: '#5BC3BA',
+      // browserColorScheme: 'light',
       fontFamily: { googleFont: 'Roboto', },
-      headerFontSize: 14,
-      rowVerticalPaddingScale: 1.1,
+      headerFontSize: 13,
+      fontSize: 12,
+      spacing: 8
    });
 
    // Apply DSR to provided data before setRowData() - using cleanup to prevent multiple loads
@@ -35,14 +37,18 @@ const TableLib = ({ data, updateSelectView }) => {
       return () => (ignore = true);
    }, []);
 
+   const title = 'Table 2 - Built With AG Grid library'
+   const caption = 'Table includes sortable rows, drag and drop columns, multiple rows per page options and pagination'
+
    return (
       <div>
-         <div onClick={() => updateSelectView(0)} className='return-button'>
+         <Header title={title} caption={caption} updateSelectView={updateSelectView} />
+         {/* <div onClick={() => updateSelectView(0)} className='return-button'>
             <span>&#129104; Back</span>
          </div>
          <h3>Table 2 - Built With AG Grid library</h3>
-         <div className='caption'>Table includes sortable rows, drag and drop columns, multiple rows per page options and pagination</div>
-         <div className='alt-container'>
+         <div className='caption'>Table includes sortable rows, drag and drop columns, multiple rows per page options and pagination</div> */}
+         <div className='agtable-container'>
             <AgGridReact
                rowData={rowData}
                columnDefs={colDefs}
@@ -51,6 +57,7 @@ const TableLib = ({ data, updateSelectView }) => {
                paginationPageSize={20}
                paginationPageSizeSelector={[20, 50, 100]}
                theme={myTheme}
+               // rowHeight={35}
             />
          </div>
       </div>
