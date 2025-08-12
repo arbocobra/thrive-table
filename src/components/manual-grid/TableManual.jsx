@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import TableBody from './TableBody';
 import TableHead from './TableHead';
 import Pagination from './Pagination';
@@ -11,36 +11,47 @@ import { handleSort, getFinalValues } from '../../sorting-functions';
 
 const TableManual = ({updateSelectView}) => {
 
-   const [rowData, setRowData] = useState();
-   const [infiniteScroll, setInfiniteScroll] = useState(true)
+   const [loading, setLoading] = useState(false)
 
-   //pagination states
-   const [displayPage, setDisplayPage] = useState(0)
-   const [rowCount, setRowCount] = useState(20)
-   const pageCount = rowData ? Math.ceil(rowData.length / rowCount) : 1
+   const toggleLoading = () => { setLoading(current => !current) }
+
+   // const [rowData, setRowData] = useState([]);
+   // const [pagination, setPagination] = useState(false)
+
+   // //pagination states
+   // const [displayPage, setDisplayPage] = useState(0)
+   // const [rowCount, setRowCount] = useState(20)
+   // const [totalDisplay, setTotalDisplay] = useState(0)
+   // const pageCount = rowData ? Math.ceil(rowData.length / rowCount) : 1
+
+   // const firstRender = useRef(true)
 
    // Custom hook to format default data and manage sorting
    // const [tableData, handleSort, isLoading] = useColumnSorting(getData())
 
+   // const fetchForScroll = async (page) => {
+   //    fetchDataRange(page)
+   //       .then(result => {
+   //          setRowData((prev) => [...prev, ...result])
+   //          if (firstRender.current) setTotalDisplay(1000)
+   //       })
+   // }
 
+   // // Fetch data then apply DSR calculation to data before setRowData() - using cleanup to prevent multiple loads
+   //    useEffect(() => {
+   //       (async () => {
+   //          if (firstRender.current) fetchForScroll(0)
+   //       })()
+   //       return () => firstRender.current = false;
+   //    }, []);
 
-   // Fetch data then apply DSR calculation to data before setRowData() - using cleanup to prevent multiple loads
-      useEffect(() => {
-         let ignore = false;
-         if (infiniteScroll) {
-            fetchDataRange(displayPage)
-               .then(result => {
-                  if (!ignore) setRowData(result)
-               })
-         } else {
-            fetchData()
-               .then(result => {
-                if (!ignore) setRowData(result)
-               })
-         }
-         
-         return () => (ignore = true);
-      }, []);
+   //    const handleLoadMore = () => {
+   //       setDisplayPage(prev => {
+   //          const nextPage = prev + 1
+   //          fetchForScroll(nextPage)
+   //          return nextPage
+   //       })
+   //    }
 
    // Defined columns with label text and accessor values
    const cols = [
@@ -60,14 +71,14 @@ const TableManual = ({updateSelectView}) => {
    return (
       <div>
          <Header title={title} caption={caption} updateSelectView={updateSelectView} />
-         { !rowData && <p>Loading...</p> }
-         { rowData && (
+         { loading && <p>Loading...</p> }
+         { !loading && (
             <>
                <table>
                   <TableHead columns={cols} handleSort={handleSort} />
-                  <TableBody page={displayPage} count={rowCount} columns={cols} data={rowData} />
+                  <TableBody columns={cols} toggleLoading={toggleLoading} />
                </table>
-               {!infiniteScroll && <Pagination displayPage={displayPage + 1} count={pageCount} setDisplayPage={setDisplayPage} rows={rowCount} setRowCount={setRowCount} />}
+               {/* {pagination && <Pagination displayPage={displayPage + 1} count={pageCount} setDisplayPage={setDisplayPage} rows={rowCount} setRowCount={setRowCount} />} */}
             </>
          )}
       </div>
