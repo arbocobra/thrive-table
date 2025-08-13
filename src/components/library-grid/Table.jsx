@@ -40,7 +40,7 @@ const Table = ({ updateSelectView }) => {
    ]);
 
    const onGridReady = useCallback((params) => {
-      fetch('/api/data.json')
+      fetch('/thrive-table/api/data.json')
          .then((resp) => resp.json())
          .then((data) => {
             const dataSource = {
