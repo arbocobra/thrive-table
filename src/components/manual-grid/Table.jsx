@@ -3,19 +3,20 @@ import TableBody from './TableBody';
 import TableHead from './TableHead';
 import Pagination from './Pagination';
 import Header from '../Header';
+import { getData } from '../../data-functions';
 import { useColumnSorting } from '../../useColumnSorting';
 
 // Table built without libraries - custom sorting hook adapted from: https://github.com/Ibaslogic/react-sortable-table.git
 
-const TableManual = ({data, updateSelectView}) => {
+const Table = ({updateSelectView}) => {
+
+   const [tableData, handleSort, isLoading] = useColumnSorting(getData(600))
 
    //pagination states
+
    const [displayPage, setDisplayPage] = useState(0)
    const [rowCount, setRowCount] = useState(20)
-   const pageCount = Math.ceil(data.length / rowCount)
-
-   // Custom hook to format default data and manage sorting
-   const [tableData, handleSort, isLoading] = useColumnSorting(data)
+   const pageCount = tableData ? Math.ceil(tableData.length / rowCount) : 1;
 
    // Defined columns with label text and accessor values
    const cols = [
@@ -29,14 +30,14 @@ const TableManual = ({data, updateSelectView}) => {
       { accessor: 'DSR', label: 'DSR' },
    ]
 
-   const title = 'Table 1 - Built From Scratch'
+   const title = 'Table 2 - Built From Scratch'
    const caption = 'Table includes sortable rows, multiple rows per page options, and pagination'
 
    return (
-      <div>
+      <div className='table-container'>
          <Header title={title} caption={caption} updateSelectView={updateSelectView} />
          { isLoading && <p>Loading...</p> }
-         { data && (
+         { tableData && (
             <>
                <table>
                   <TableHead columns={cols} handleSort={handleSort} />
@@ -48,4 +49,4 @@ const TableManual = ({data, updateSelectView}) => {
       </div>
    )
 }
-export default TableManual;
+export default Table;
