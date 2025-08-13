@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
 import { InfiniteRowModelModule, ModuleRegistry, themeQuartz } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
-import Header from '../Header';
-import { getDSRCount } from './../../data-functions';
+import { getDSRCount } from '../../data-functions';
 
 ModuleRegistry.registerModules([InfiniteRowModelModule]);
 
@@ -13,7 +12,7 @@ const theme = themeQuartz.withParams({
    spacing: 8,
 });
 
-const Table = ({ updateSelectView }) => {
+const InfiniteTable = ({ updateSelectView }) => {
    const [columnDefs, setColumnDefs] = useState([
       { field: 'Id', headerName: 'ID', flex: 1 },
       {
@@ -66,13 +65,8 @@ const Table = ({ updateSelectView }) => {
          });
    }, []);
 
-   const title = 'Table 1 - Built With AG Grid library';
-   const caption = 'Table includes sortable rows, drag and drop columns and infinite scrolling';
-
    return (
-      <div className='table-container'>
-         <Header title={title} caption={caption} updateSelectView={updateSelectView} />
-         <div className='agtable-container'>
+<div className='agtable-container'>
             <AgGridReact
                columnDefs={columnDefs}
                rowBuffer={0}
@@ -85,8 +79,7 @@ const Table = ({ updateSelectView }) => {
                onGridReady={onGridReady}
                theme={theme}
             />
-         </div>
-      </div>
+            </div>
    );
 };
-export default Table;
+export default InfiniteTable;

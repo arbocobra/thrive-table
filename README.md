@@ -14,7 +14,9 @@ Built using [AG Grid](https://www.ag-grid.com/) this Table fulfills all the requ
 - Sortable rows using each column
 - 500+ rows of data
 
-I chose AG Grid because it offered drag and drop columns and infinite scroll in it's basic features, as well as many other customizations. Infinite scroll is usually implemented to reduce load time when fetching data. To better demonstrate this functionality I added a pre-populated API/data.json file using data from Faker, to more accurately recreate the environment a table like this would be used.
+I chose AG Grid because it offered drag and drop columns and infinite scroll in it's basic features, as well as many other customizations. Unfortunately AG Grid library does not allow column sorting function while using infinite scroll, so I implemented a checkbox to toggle between infinite rows and paginated rows with sortable columns.
+
+Infinite scroll is usually implemented to reduce load time when fetching data. To better demonstrate this functionality I added a pre-populated API/data.json file using data from Faker, to more accurately recreate the environment a table like this would be used.
 
 ### Table Two
 Built without any component libraries, each component was written by me. It does not meet all the requirements of the assignment, but it includes:

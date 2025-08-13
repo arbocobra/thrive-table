@@ -2,7 +2,7 @@ import { useState } from 'react'
 import CustomTable from './components/manual-grid/Table';
 import SelectGrid from './components/SelectGrid';
 import Footer from './components/Footer';
-import LibraryTable from './components/library-grid/Table';
+import LibraryTable from './components/library-grid/Container'
 import './App.css'
 
 const App = () => {
@@ -18,8 +18,8 @@ const App = () => {
   return (
       <div className='container'>
         { gridDisplay == 'select' && <SelectGrid updateSelectView={updateSelectView} /> }
-        { gridDisplay == 'manual' && <CustomTable updateSelectView={updateSelectView} /> }
         { gridDisplay == 'agGrid' && <LibraryTable updateSelectView={updateSelectView}/> }
+        { gridDisplay == 'manual' && <CustomTable updateSelectView={updateSelectView} /> }
         <Footer />
       </div>
     )
