@@ -4,7 +4,7 @@ import PaginationTable from './PaginationTable';
 import { useState } from 'react';
 
 const Container = ({ updateSelectView }) => {
-   const [rowType, setRowType] = useState('pagination')
+   const [rowType, setRowType] = useState('infinite')
    const title = 'Table 1 - Built With AG Grid library';
    const caption = 'Table includes drag and drop columns and toggle for infinite scrolling or pagination with sortable columns';
 
