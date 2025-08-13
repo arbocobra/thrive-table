@@ -14,23 +14,25 @@ const theme = themeQuartz.withParams({
 
 const InfiniteTable = ({ updateSelectView }) => {
    const [columnDefs, setColumnDefs] = useState([
-      { field: 'Id', headerName: 'ID', flex: 1 },
+      { field: 'Id', headerName: 'ID', flex: 1, sortable: false },
       {
          field: 'FullName',
          flex: 3,
+         sortable: false,
          valueGetter: (p) => {
             if (p.data !== undefined) return `${p.data.FirstName} ${p.data.LastName}`;
             else return <img src='https://www.ag-grid.com/example-assets/loading.gif' />;
          },
       },
-      { field: 'FirstName', flex: 2 },
-      { field: 'LastName', flex: 2 },
-      { field: 'Email', flex: 3 },
-      { field: 'City', flex: 2 },
-      { field: 'RegDate', headerName: 'Registered Date', flex: 2 },
+      { field: 'FirstName', flex: 2, sortable: false },
+      { field: 'LastName', flex: 2, sortable: false },
+      { field: 'Email', flex: 3, sortable: false },
+      { field: 'City', flex: 2, sortable: false },
+      { field: 'RegDate', headerName: 'Registered Date', flex: 2, sortable: false },
       {
          field: 'DSR',
          flex: 1,
+         sortable: false,
          valueGetter: (p) => {
             if (p.data !== undefined) return getDSRCount(p.data.RegDate);
             else return <img src='https://www.ag-grid.com/example-assets/loading.gif' />;
